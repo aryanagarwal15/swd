@@ -32,11 +32,15 @@ injectTapEventPlugin();
 
 /* eslint-disable global-require */
 
-const client = new ApolloClient({
-  ssrMode: true, // serverside rendering
+const apolloClient = new ApolloClient({
   networkInterface: createNetworkInterface({
-    uri: 'http://localhost:3001/graphql',
+    uri: '/graphql',
+    opts: {
+      // Additional fetch options like `credentials` or `headers`
+      //credentials: 'include',
+    },
   }),
+  queryDeduplication: true,
 });
 
 // Global (context) variables that can be easily accessed from any React component
@@ -49,7 +53,7 @@ const context = {
     const removeCss = styles.map(x => x._insertCss());
     return () => { removeCss.forEach(f => f()); };
   },
-
+  client: apolloClient,
 };
 
 // Switch off the native scroll restoration behavior and handle it manually
@@ -145,7 +149,7 @@ async function onLocationChange(location, action) {
     appInstance = ReactDOM.render(
       <App context={context}>
         {/* Inject Apollo client into the component*/}
-        <ApolloProvider client={client}>
+        <ApolloProvider client={apolloClient}>
           <MuiThemeProvider>
             {/* Injecting Material-UI theme into application context*/}
             {route.component}

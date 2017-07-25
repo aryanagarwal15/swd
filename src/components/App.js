@@ -13,6 +13,8 @@ const ContextType = {
   // Enables critical path CSS rendering
   // https://github.com/kriasoft/isomorphic-style-loader
   insertCss: PropTypes.func.isRequired,
+  // Apollo client 
+  client: PropTypes.object.isRequired,
 };
 
 /**
